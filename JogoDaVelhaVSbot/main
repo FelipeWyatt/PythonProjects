@@ -1,0 +1,142 @@
+import numpy as np
+import random 
+
+
+def mostra(tab):
+  tab1 = [[0,0,0],[0,0,0],[0,0,0]]
+  for i in range(3):
+    for j in range(3):
+      if tab[i][j] == 0:
+        tab1[i][j] = ' '
+      elif tab[i][j] == 1:
+        tab1[i][j] = 'X'
+      elif tab[i][j] == 2:
+        tab1[i][j] = 'O'
+  
+  print(tab1[0][0]," | ",tab1[0][1]," | ",tab1[0][2])
+  print("-------------")
+  print(tab1[1][0]," | ",tab1[1][1]," | ",tab1[1][2])
+  print("-------------")
+  print(tab1[2][0]," | ",tab1[2][1]," | ",tab1[2][2])
+  print("\n")
+
+
+def create_board():
+    return np.zeros((3,3), dtype = int)
+
+def place(board, player, position):
+    board[position] = player
+
+def user_play(board, player):
+    ind = input("Próxima Jogada (linha)(coluna): ")
+    i = int(ind[0])
+    j = int(ind[1])
+    while len(ind) != 2 or 0 < i or i > 2 or 0 < j or j > 2:
+        print("Entrada inválida.")
+        ind = input("Próxima Jogada (linha)(coluna): ")
+        i = int(ind[0])
+        j = int(ind[1])
+    place(board, player, (i, j))
+    
+def possibilities(board):
+    lista = np.where(board == 0)
+    tuplas = []
+    for i in range(len(lista[0])):
+        tuplas.append((lista[0][i], lista[1][i]))
+    return tuplas
+
+def bot_play(board, player):
+    # estrategia inicial é jogar aleatoriamente
+    selections = possibilities(board)
+    if len(selections) > 0:
+        selection = random.choice(selections)
+        place(board, player, selection)
+    return board 
+    
+    
+    
+def troca_vez(vez):
+    if vez == 1:
+        return 2
+    elif vez == 2:
+        return 1
+    else:
+        print("Time não existe")
+        return 1
+
+
+
+board = create_board()
+vez = 1
+bot_play(board, vez)
+troca_vez(vez)
+user_play(board, vez)
+mostra(board)
+
+
+
+
+
+
+
+def possibilities(board):
+    lista = np.where(board == 0)
+    tuplas = []
+    for i in range(len(lista[0])):
+        tuplas.append((lista[0][i], lista[1][i]))
+    return tuplas
+
+def random_place(board, player):
+    selections = possibilities(board)
+    if len(selections) > 0:
+        selection = random.choice(selections)
+        place(board, player, selection)
+    return board
+
+def row_win(board, player):
+    lista = np.where(board == player)
+    #print(lista)
+    
+    #print(np.count_nonzero(lista[0] == 0))
+    #print(np.count_nonzero(lista[0] == 1))
+    #print(np.count_nonzero(lista[0] == 2))
+    for i in range(3):
+        if np.count_nonzero(lista[0] == i) == 3: #verifica se o primeiro array (linhas) tem 3 zeros, ums ou dois
+            return True
+    
+    return False
+
+def col_win(board, player):
+    lista = np.where(board == player)
+    for i in range(3):
+        if np.count_nonzero(lista[1] == i) == 3: #verifica se o primeiro array (colunas) tem 3 zeros, ums ou dois
+            return True
+    return False
+
+def diag_win(board, player):
+    if board[0,0] == board[1,1] == board[2,2] == player: #verifica se as diagonais estao completas
+        return True
+    if board[0,2] == board[1,1] == board[2,0] == player:
+        return True
+    return False
+
+def evaluate(board):
+    winner = 0
+    for player in [1, 2]:
+        # add your code here!
+        if row_win(board, player) or col_win(board, player) or diag_win(board, player):
+            winner = player
+    if np.all(board != 0) and winner == 0:
+        winner = -1
+    return winner
+
+
+    
+def play_game():
+    board = create_board()
+    vez = 1
+    while evaluate(board) == 0:
+        random_place(board, vez)
+        vez = troca_vez(vez)
+    #print(board)
+    return evaluate(board)
