@@ -1,0 +1,26 @@
+{
+  "28/05/20 23h59": {
+    "lista 7 Calculo": {
+      "feito": false,
+      "tempoExec": 6
+    }
+  },
+  "30/05/20 23h59": {
+    "lab05": {
+      "feito": true,
+      "tempoExec": 6
+    }
+  },
+  "04/06/20 23h59": {
+    "lista 8 Calculo": {
+      "feito": false,
+      "tempoExec": 60
+    }
+  },
+  "03/06/20 23h59": {
+    "Lab07": {
+      "feito": false,
+      "tempoExec": 6
+    }
+  }
+}
